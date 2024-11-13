@@ -11,30 +11,22 @@ if ($conn->connect_error) {
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     $id = $_GET['id'];
 
-    // Obtener el nombre y sector de la impresora
-    $info_sql = "SELECT nombre, sector FROM impresoras WHERE id = ?";
-    $stmt_info = $conn->prepare($info_sql);
-    $stmt_info->bind_param("i", $id);
-    $stmt_info->execute();
-    $result_info = $stmt_info->get_result();
-    
-    if ($result_info && $result_info->num_rows > 0) {
-        $impresora_info = $result_info->fetch_assoc();
-        $nombre = $impresora_info['nombre'];
-        $sector = $impresora_info['sector'];
-    } else {
-        die("Impresora no encontrada.");
-    }
-
-    // Consultar el historial de la impresora especificada
+    // Consulta para obtener el historial de la impresora especificada
     $sql = "SELECT * FROM historial_impresoras WHERE id_impresora = ? ORDER BY fecha_actualizacion DESC";
     $stmt = $conn->prepare($sql);
+
+    // Verificar si la consulta se preparó correctamente
+    if ($stmt === false) {
+        die("Error en la preparación de la consulta: " . $conn->error);
+    }
+
+    // Enlazar parámetros y ejecutar la consulta
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result === false) {
-        die("Error en la consulta SQL: " . $conn->error);
+        die("Error en la ejecución de la consulta: " . $conn->error);
     }
 } else {
     die("ID de impresora no proporcionado o no válido.");
@@ -51,7 +43,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 </head>
 <body>
     <div class="container">
-        <h1>Historial de Cambios - <?php echo htmlspecialchars($nombre); ?> (Sector: <?php echo htmlspecialchars($sector); ?>)</h1>
+        <h1>Historial de Cambios - Impresora ID <?php echo htmlspecialchars($id); ?></h1>
 
         <?php if ($result->num_rows > 0): ?>
             <table>
@@ -68,12 +60,12 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                 <tbody>
                     <?php while ($row = $result->fetch_assoc()): ?>
                         <tr>
-                            <td><?php echo $row['id']; ?></td>
-                            <td><?php echo $row['contador_negro']; ?></td>
-                            <td><?php echo $row['contador_color']; ?></td>
-                            <td><?php echo $row['total_impresiones']; ?></td>
-                            <td><?php echo $row['estado']; ?></td>
-                            <td><?php echo $row['fecha_actualizacion']; ?></td>
+                            <td><?php echo htmlspecialchars($row['id']); ?></td>
+                            <td><?php echo htmlspecialchars($row['contador_negro']); ?></td>
+                            <td><?php echo htmlspecialchars($row['contador_color']); ?></td>
+                            <td><?php echo htmlspecialchars($row['total_impresiones']); ?></td>
+                            <td><?php echo htmlspecialchars($row['estado']); ?></td>
+                            <td><?php echo htmlspecialchars($row['fecha_actualizacion']); ?></td>
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
@@ -86,8 +78,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 </html>
 
 <?php
-// Cerrar la conexión
+// Cerrar la consulta y la conexión
 $stmt->close();
-$stmt_info->close();
 $conn->close();
 ?>

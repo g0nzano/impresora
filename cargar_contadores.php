@@ -7,8 +7,15 @@ if ($conn->connect_error) {
     die("Error de conexión: " . $conn->connect_error);
 }
 
-// Obtener la lista de impresoras
-$sql = "SELECT * FROM impresoras";
+// Consulta para obtener impresoras con sus modelos y nombres correspondientes
+$sql = "SELECT impresoras.id, modelos.nombre_modelo AS modelo, nombres.nombre_impresora AS nombre,
+               impresoras.contador_negro, impresoras.contador_color, impresoras.total_impresiones,
+               impresoras.fecha_instalacion, impresoras.lugar, impresoras.sector, impresoras.estado,
+               impresoras.fecha_registro, impresoras.fecha_actualizacion
+        FROM impresoras
+        LEFT JOIN modelos ON impresoras.modelo_id = modelos.id
+        LEFT JOIN nombres ON impresoras.nombre_id = nombres.id";
+
 $result = $conn->query($sql);
 ?>
 
