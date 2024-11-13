@@ -1,46 +1,154 @@
+/* Estilos Generales */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
+/* Contenedor Principal */
 .container {
-  width: 60%;
-  margin: 50px auto;
-  background: #fff;
+  width: 90%;
+  max-width: 800px;
+  background-color: #fff;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  margin: 20px;
   text-align: center;
 }
 
+/* Títulos */
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Tabla */
+.table-container {
+  width: 100%;
+  overflow-x: auto; /* Permite desplazamiento horizontal en pantallas pequeñas */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+thead {
+  background-color: #4caf50;
+  color: white;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Botones de Acción */
+.button,
+button[type="submit"] {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 16px;
+  margin-top: 10px;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover,
+button[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Formularios */
 form {
   display: flex;
   flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
 }
 
 label {
-  margin-top: 10px;
+  text-align: left;
+  font-size: 14px;
 }
 
-input,
-select,
-button {
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+  width: 100%;
   padding: 10px;
-  margin-top: 5px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  font-size: 14px;
 }
 
-button {
-  background-color: #4caf50;
-  color: white;
-  cursor: pointer;
-  margin-top: 15px;
+/* Responsive */
+@media (max-width: 768px) {
+  .table-container {
+    overflow-x: auto;
+  }
+
+  th,
+  td {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .button,
+  button[type="submit"] {
+    font-size: 14px;
+    padding: 8px 15px;
+  }
 }
 
-button:hover {
-  background-color: #45a049;
+@media (max-width: 576px) {
+  h1 {
+    font-size: 18px;
+  }
+
+  th,
+  td {
+    font-size: 10px;
+    padding: 6px;
+  }
+
+  .container {
+    width: 100%;
+    padding: 10px;
+  }
 }

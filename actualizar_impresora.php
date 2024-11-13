@@ -1,34 +1,45 @@
 <?php
 // Conectar a la base de datos
-$conn = new mysqli('localhost', 'root', '', 'control_impresoras');
+$conn = new mysqli('localhost', 'root', '', 'gestion_impresoras');
 
 // Comprobar la conexión
 if ($conn->connect_error) {
     die("Error de conexión: " . $conn->connect_error);
 }
 
-// Obtener ID de la impresora a actualizar
-$id = $_GET['id'];
+// Verificar si se ha proporcionado el ID en la URL
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
 
-// Obtener los datos actuales de la impresora
-$sql = "SELECT * FROM impresoras WHERE id = $id";
-$result = $conn->query($sql);
-$impresora = $result->fetch_assoc();
+    // Obtener los datos actuales de la impresora
+    $sql = "SELECT * FROM impresoras WHERE id = $id";
+    $result = $conn->query($sql);
 
-// Actualizar datos al enviar el formulario
+    // Verificar que la impresora exista
+    if ($result && $result->num_rows > 0) {
+        $impresora = $result->fetch_assoc();
+    } else {
+        die("Impresora no encontrada.");
+    }
+} else {
+    die("ID de impresora no proporcionado.");
+}
+
+// Procesar el formulario al enviar
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $contador_negro = $_POST['contador_negro'];
-    $contador_color = $_POST['contador_color'];
+    $nombre = $_POST['nombre'];
+    $sector = $_POST['sector'];
     $estado = $_POST['estado'];
-    $total_impresiones = $contador_negro + $contador_color;
+    $fecha_actualizacion = date('Y-m-d H:i:s');
 
-    // Actualizar en la base de datos
-    $update_sql = "UPDATE impresoras SET contador_negro = '$contador_negro', contador_color = '$contador_color', total_impresiones = '$total_impresiones', estado = '$estado' WHERE id = $id";
+    // Actualizar la tabla principal con los campos permitidos
+    $update_sql = "UPDATE impresoras SET nombre = '$nombre', sector = '$sector', estado = '$estado', fecha_actualizacion = '$fecha_actualizacion' 
+                   WHERE id = $id";
 
     if ($conn->query($update_sql) === TRUE) {
         echo "Impresora actualizada exitosamente.";
     } else {
-        echo "Error: " . $update_sql . "<br>" . $conn->error;
+        echo "Error al actualizar la impresora: " . $conn->error;
     }
 }
 ?>
@@ -43,20 +54,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <div class="container">
-        <h1>Actualizar Impresora</h1>
-        
+        <h1>Actualizar Impresora - <?php echo $impresora['nombre']; ?></h1>
+
         <form action="" method="POST">
             <label for="modelo">Modelo:</label>
             <input type="text" id="modelo" name="modelo" value="<?php echo $impresora['modelo']; ?>" readonly>
 
             <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" value="<?php echo $impresora['nombre']; ?>" readonly>
+            <input type="text" id="nombre" name="nombre" value="<?php echo $impresora['nombre']; ?>" required>
 
-            <label for="contador_negro">Contador de Impresiones en Negro:</label>
-            <input type="number" id="contador_negro" name="contador_negro" value="<?php echo $impresora['contador_negro']; ?>" required>
-
-            <label for="contador_color">Contador de Impresiones a Color:</label>
-            <input type="number" id="contador_color" name="contador_color" value="<?php echo $impresora['contador_color']; ?>" required>
+            <label for="sector">Sector:</label>
+            <input type="text" id="sector" name="sector" value="<?php echo $impresora['sector']; ?>" required>
 
             <label for="estado">Estado:</label>
             <select id="estado" name="estado">
