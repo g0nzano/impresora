@@ -7,16 +7,22 @@ if ($conn->connect_error) {
     die("Error de conexión: " . $conn->connect_error);
 }
 
+// Obtener marcas de la base de datos
+$marcas_result = $conn->query("SELECT id, nombre_marca FROM marcas");
+if (!$marcas_result) {
+    die("Error en la consulta de marcas: " . $conn->error);
+}
+
 // Obtener modelos de la base de datos
-$modelos_result = $conn->query("SELECT id, nombre_modelo FROM modelos");
+$modelos_result = $conn->query("SELECT id, nombre_modelo, marca_id FROM modelos");
 if (!$modelos_result) {
     die("Error en la consulta de modelos: " . $conn->error);
 }
 
-// Obtener nombres de la base de datos
-$nombres_result = $conn->query("SELECT id, nombre_impresora FROM nombres");
-if (!$nombres_result) {
-    die("Error en la consulta de nombres: " . $conn->error);
+// Preparar los modelos en un array asociativo por marca
+$modelos_por_marca = [];
+while ($row = $modelos_result->fetch_assoc()) {
+    $modelos_por_marca[$row['marca_id']][] = $row;
 }
 ?>
 
@@ -27,27 +33,50 @@ if (!$nombres_result) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Nueva Impresora</title>
     <link rel="stylesheet" href="styles.css">
+    <script>
+        // JavaScript para actualizar los modelos en función de la marca seleccionada
+        document.addEventListener("DOMContentLoaded", function() {
+            const modelosPorMarca = <?php echo json_encode($modelos_por_marca); ?>;
+            const marcaSelect = document.getElementById("marca_id");
+            const modeloSelect = document.getElementById("modelo_id");
+
+            marcaSelect.addEventListener("change", function() {
+                const marcaId = this.value;
+
+                // Limpiar el campo de modelos
+                modeloSelect.innerHTML = '<option value="">Seleccione un modelo</option>';
+
+                // Agregar modelos correspondientes a la marca seleccionada
+                if (modelosPorMarca[marcaId]) {
+                    modelosPorMarca[marcaId].forEach(function(modelo) {
+                        const option = document.createElement("option");
+                        option.value = modelo.id;
+                        option.textContent = modelo.nombre_modelo;
+                        modeloSelect.appendChild(option);
+                    });
+                }
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="container">
         <h1>Registrar Nueva Impresora</h1>
         <form action="guardar_impresora.php" method="POST">
+            <!-- Seleccionar Marca -->
+            <label for="marca_id">Marca:</label>
+            <select id="marca_id" name="marca_id" required>
+                <option value="">Seleccione una marca</option>
+                <?php while ($row = $marcas_result->fetch_assoc()): ?>
+                    <option value="<?php echo $row['id']; ?>"><?php echo $row['nombre_marca']; ?></option>
+                <?php endwhile; ?>
+            </select>
+
             <!-- Seleccionar Modelo -->
             <label for="modelo_id">Modelo:</label>
             <select id="modelo_id" name="modelo_id" required>
                 <option value="">Seleccione un modelo</option>
-                <?php while ($row = $modelos_result->fetch_assoc()): ?>
-                    <option value="<?php echo $row['id']; ?>"><?php echo $row['nombre_modelo']; ?></option>
-                <?php endwhile; ?>
-            </select>
-
-            <!-- Seleccionar Nombre -->
-            <label for="nombre_id">Nombre:</label>
-            <select id="nombre_id" name="nombre_id" required>
-                <option value="">Seleccione un nombre</option>
-                <?php while ($row = $nombres_result->fetch_assoc()): ?>
-                    <option value="<?php echo $row['id']; ?>"><?php echo $row['nombre_impresora']; ?></option>
-                <?php endwhile; ?>
+                <!-- Los modelos se cargarán dinámicamente según la marca seleccionada -->
             </select>
 
             <!-- Ingresar Número de Serie -->
