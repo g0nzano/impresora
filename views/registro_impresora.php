@@ -62,7 +62,7 @@ while ($row = $modelos_result->fetch_assoc()) {
 <body>
     <div class="container">
         <h1>Registrar Nueva Impresora</h1>
-        <form action="guardar_impresora.php" method="POST">
+        <form action="../controllers/guardar_impresora.php" method="POST" enctype="multipart/form-data">
             <!-- Seleccionar Marca -->
             <label for="marca_id">Marca:</label>
             <select id="marca_id" name="marca_id" required>
