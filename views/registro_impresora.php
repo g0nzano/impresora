@@ -32,7 +32,7 @@ while ($row = $modelos_result->fetch_assoc()) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Nueva Impresora</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
     <script>
         // JavaScript para actualizar los modelos en función de la marca seleccionada
         document.addEventListener("DOMContentLoaded", function() {

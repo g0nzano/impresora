@@ -90,7 +90,7 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar y Administrar Marcas y Modelos</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
 </head>
 <body>
     <div class="container">
