@@ -65,7 +65,7 @@ $result = $conn->query($sql);
                         echo "<td>" . $row['estado'] . "</td>";
                         echo "<td>" . $row['fecha_registro'] . "</td>";
                         echo "<td>" . $row['fecha_actualizacion'] . "</td>";
-                        echo "<td><a href='actualizar_impresora.php?id=" . $row['id'] . "'>Actualizar</a> | <a href='ver_historial.php?id=" . $row['id'] . "'>Ver Historial</a></td>";
+                        echo "<td><a href='../controllers/actualizar_impresora.php?id=" . $row['id'] . "'>Actualizar</a> | <a href='ver_historial.php?id=" . $row['id'] . "'>Ver Historial</a></td>";
                         echo "</tr>";
                     }
                 } else {
