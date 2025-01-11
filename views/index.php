@@ -12,7 +12,7 @@
         <div class="menu">
             <a href="registro_impresora.php" class="button">Registrar Nueva Impresora</a>
             <a href="listado_impresoras.php" class="button">Listar Impresoras</a>
-            <a href="cargar_contadores.php" class="button">Cargar Contadores</a>
+            <a href="../controllers/cargar_contadores.php" class="button">Cargar Contadores</a>
         </div>
     </div>
 </body>
