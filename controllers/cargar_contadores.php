@@ -2,6 +2,14 @@
 // Conectar a la base de datos
 $conn = new mysqli('localhost', 'root', '', 'gestion_impresoras');
 
+session_start();
+
+// Verificar si el usuario ha iniciado sesión y tiene el rol adecuado
+if (!isset($_SESSION['usuario']) || $_SESSION['rol'] !== 'admin') {
+    header('Location: ../views/login.php'); // Redirige al login si no es admin
+    exit;
+}
+
 // Comprobar la conexión
 if ($conn->connect_error) {
     die("Error de conexión: " . $conn->connect_error);

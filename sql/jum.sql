@@ -104,5 +104,37 @@ ALTER TABLE impresoras
 DROP COLUMN modelo_id;
 
 
+CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_usuario VARCHAR(50) NOT NULL UNIQUE,
+    contrasena VARCHAR(255) NOT NULL,
+    rol ENUM('admin', 'usuario') DEFAULT 'usuario',
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+INSERT INTO usuarios (nombre_usuario, contrasena, rol) VALUES
+('admin', MD5('admin123'), 'admin'),
+('usuario', MD5('usuario123'), 'usuario');
+
+SELECT 
+    impresoras.id,
+    modelos.nombre_modelo AS modelo,
+    nombres.nombre_impresora AS nombre,
+    marcas.nombre_marca AS marca,
+    series.numero_serie AS numero_serie,
+    impresoras.contador_negro,
+    impresoras.contador_color,
+    impresoras.total_impresiones,
+    impresoras.fecha_instalacion,
+    impresoras.lugar,
+    impresoras.sector,
+    impresoras.fecha_actualizacion,
+    impresoras.estado,
+    impresoras.fecha_registro
+FROM impresoras
+LEFT JOIN modelos ON impresoras.modelo_id = modelos.id
+LEFT JOIN nombres ON impresoras.nombre_id = nombres.id
+LEFT JOIN marcas ON impresoras.marca_id = marcas.id
+LEFT JOIN series ON series.id_impresora = impresoras.id;
+
 
 

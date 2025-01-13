@@ -1,4 +1,15 @@
+<?php
+session_start();
+if (!isset($_SESSION['usuario']) || $_SESSION['rol'] !== 'admin') {
+    header('Location: ../views/login.php');
+    exit;
+}
+
+// Código para el panel de administración aquí
+?>
+
 <!DOCTYPE html>
+<a href="../controllers/logout.php" class="button">Cerrar Sesión</a>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
